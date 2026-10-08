@@ -1,0 +1,8 @@
+{
+  "name": "Remix PayVoice",
+  "description": "Always-on payment speaker that announces incoming CBE and Telebirr SMS transactions out loud.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
