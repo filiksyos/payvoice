@@ -1,6 +1,7 @@
 package com.example.data
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 enum class PaymentServiceType {
@@ -9,7 +10,7 @@ enum class PaymentServiceType {
     OTHER
 }
 
-@Entity(tableName = "payments")
+@Entity(tableName = "payments", indices = [Index(value = ["smsMessageKey"], unique = true)])
 data class PaymentRecord(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
@@ -23,5 +24,6 @@ data class PaymentRecord(
     val rawBody: String,
     val timestamp: Long = System.currentTimeMillis(),
     val announcedText: String,
-    val isAnnounced: Boolean = true
+    val isAnnounced: Boolean = true,
+    val smsMessageKey: String? = null
 )

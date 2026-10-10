@@ -71,6 +71,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _selectedFilter.value = filter
     }
 
+    fun startMonitoringIfEnabled() {
+        if (settings.value.isServiceEnabled) PaymentSpeakerService.start(getApplication())
+    }
+
     fun setSearchQuery(query: String) {
         _searchQuery.value = query
     }

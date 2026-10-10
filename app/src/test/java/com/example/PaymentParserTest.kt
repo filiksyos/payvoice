@@ -11,6 +11,18 @@ import org.junit.Test
 class PaymentParserTest {
 
     @Test
+    fun testTelebirrBankTransferFrom127() {
+        val body = "Dear, You have received ETB 10.0 by transaction number <> on 2026-10-09 11:35:44 from Commercial Bank of Ethiopia to your teebirr Account 251... Your current balance is ETB 200.00. Thank you for using telebirr Ethio telecom."
+
+        assertTrue(PaymentParser.isPaymentMessage("127", body))
+        val parsed = PaymentParser.parse("127", body)
+        assertNotNull(parsed)
+        assertEquals(PaymentServiceType.TELEBIRR, parsed!!.serviceType)
+        assertEquals(10.0, parsed.amount, 0.001)
+        assertTrue(parsed.speechAnnouncement.contains("10 Birr"))
+    }
+
+    @Test
     fun testTelebirrPaymentParsing() {
         val sender = "telebirr"
         val body = "Dear Customer, you have received 500.00 ETB from Abebe Kebede (251911223344). Transaction ID: TB9928341. Your current balance is 2,450.00 ETB."

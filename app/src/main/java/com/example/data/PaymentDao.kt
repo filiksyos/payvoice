@@ -27,6 +27,13 @@ interface PaymentDao {
     @Query("SELECT * FROM payments WHERE id = :id LIMIT 1")
     suspend fun getPaymentById(id: Long): PaymentRecord?
 
+    @Query("""
+        SELECT EXISTS(SELECT 1 FROM payments WHERE smsMessageKey = :messageKey OR
+        (smsMessageKey IS NOT NULL AND LOWER(senderAddress) = LOWER(:sender) AND rawBody = :body
+        AND timestamp >= :sinceTimestamp AND (:missingSentTime OR smsMessageKey LIKE 'unknown:%')))
+    """)
+    suspend fun hasSmsPayment(messageKey: String, sender: String, body: String, sinceTimestamp: Long, missingSentTime: Boolean): Boolean
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPayment(payment: PaymentRecord): Long
 

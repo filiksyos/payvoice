@@ -55,6 +55,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.MainViewModel
+import com.example.ui.components.BackgroundAccessCard
 import com.example.ui.theme.CbePurple
 import com.example.ui.theme.EmeraldPrimary
 import com.example.ui.theme.GoldAccent
@@ -74,6 +75,7 @@ fun SettingsScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        BackgroundAccessCard()
         // Audio & Loudspeaker Settings
         Card(
             shape = RoundedCornerShape(20.dp),

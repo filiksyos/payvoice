@@ -16,7 +16,12 @@ import androidx.core.app.NotificationCompat
 import com.example.MainActivity
 import com.example.R
 import com.example.data.PreferencesManager
+import com.example.data.PaymentSmsProcessor
 import com.example.tts.TtsManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -73,11 +78,17 @@ class PaymentSpeakerService : Service() {
     private lateinit var ttsManager: TtsManager
     private lateinit var preferencesManager: PreferencesManager
     private var wakeLock: PowerManager.WakeLock? = null
+    private val monitoringScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private lateinit var inboxMonitor: SmsInboxMonitor
 
     override fun onCreate() {
         super.onCreate()
         ttsManager = TtsManager.getInstance(applicationContext)
         preferencesManager = PreferencesManager(applicationContext)
+        val processor = PaymentSmsProcessor(applicationContext)
+        inboxMonitor = SmsInboxMonitor(applicationContext, monitoringScope, { sms ->
+            processor.process(sms.sender, sms.body, sms.sentAt, "Inbox")
+        })
 
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         wakeLock = powerManager.newWakeLock(
@@ -90,9 +101,11 @@ class PaymentSpeakerService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val action = intent?.action ?: ACTION_START_SERVICE
+        Log.i(TAG, "Service command: $action")
 
         when (action) {
             ACTION_STOP_SERVICE -> {
+                inboxMonitor.stop()
                 _isRunning.value = false
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf()
@@ -116,7 +129,6 @@ class PaymentSpeakerService : Service() {
     }
 
     private fun startAsForeground() {
-        _isRunning.value = true
         val notification = buildForegroundNotification("Active: Monitoring CBE & Telebirr SMS")
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -128,21 +140,24 @@ class PaymentSpeakerService : Service() {
             } else {
                 startForeground(NOTIFICATION_ID, notification)
             }
+            _isRunning.value = true
+            inboxMonitor.start()
         } catch (e: Exception) {
+            _isRunning.value = false
             Log.e(TAG, "Failed to start foreground service", e)
         }
     }
 
     private fun speakWithWakeLock(text: String) {
         try {
-            wakeLock?.acquire(15000L) // 15-second safety timeout
+            wakeLock?.acquire(180000L) // Safety timeout covers initialization and repeated speech.
         } catch (e: Exception) {
             Log.e(TAG, "Failed to acquire wake lock", e)
         }
 
         val settings = preferencesManager.settings.value
         if (!settings.isServiceEnabled) {
-            Log.d(TAG, "Service is muted/disabled in settings, skipping TTS")
+            Log.i(TAG, "Service is muted/disabled in settings, skipping TTS")
             releaseWakeLock()
             return
         }
@@ -208,6 +223,8 @@ class PaymentSpeakerService : Service() {
     }
 
     override fun onDestroy() {
+        inboxMonitor.stop()
+        monitoringScope.cancel()
         super.onDestroy()
         _isRunning.value = false
         releaseWakeLock()
