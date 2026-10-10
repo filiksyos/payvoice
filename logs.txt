@@ -1,0 +1,31 @@
+47-20047 AndroidRuntime          com.aistudio.applet.amqeil           D  Shutting down VM
+2026-10-09 10:23:18.685 20047-20047 AndroidRuntime          com.aistudio.applet.amqeil           E  FATAL EXCEPTION: main
+                                                                                                    Process: com.aistudio.applet.amqeil, PID: 20047
+                                                                                                    java.lang.RuntimeException: Unable to instantiate receiver com.example.receiver.BootCompletedReceiver: java.lang.ClassNotFoundException: Didn't find class "com.example.receiver.BootCompletedReceiver" on path: DexPathList[[zip file "/data/app/~~hJgglDFBJC_Mi94ADaY52A==/com.aistudio.applet.amqeil-kwA8e7ZD6If-tXpo5UponQ==/base.apk"],nativeLibraryDirectories=[/data/app/~~hJgglDFBJC_Mi94ADaY52A==/com.aistudio.applet.amqeil-kwA8e7ZD6If-tXpo5UponQ==/lib/arm64, /data/app/~~hJgglDFBJC_Mi94ADaY52A==/com.aistudio.applet.amqeil-kwA8e7ZD6If-tXpo5UponQ==/base.apk!/lib/arm64-v8a, /system/lib64, /system_ext/lib64]]
+                                                                                                    	at android.app.ActivityThread.handleReceiver(ActivityThread.java:5003)
+                                                                                                    	at android.app.ActivityThread.-$$Nest$mhandleReceiver(ActivityThread.java:0)
+                                                                                                    	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2550)
+                                                                                                    	at android.os.Handler.dispatchMessage(Handler.java:107)
+                                                                                                    	at android.os.Looper.loopOnce(Looper.java:273)
+                                                                                                    	at android.os.Looper.loop(Looper.java:364)
+                                                                                                    	at android.app.ActivityThread.main(ActivityThread.java:9114)
+                                                                                                    	at java.lang.reflect.Method.invoke(Native Method)
+                                                                                                    	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:692)
+                                                                                                    	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939)
+                                                                                                    Caused by: java.lang.ClassNotFoundException: Didn't find class "com.example.receiver.BootCompletedReceiver" on path: DexPathList[[zip file "/data/app/~~hJgglDFBJC_Mi94ADaY52A==/com.aistudio.applet.amqeil-kwA8e7ZD6If-tXpo5UponQ==/base.apk"],nativeLibraryDirectories=[/data/app/~~hJgglDFBJC_Mi94ADaY52A==/com.aistudio.applet.amqeil-kwA8e7ZD6If-tXpo5UponQ==/lib/arm64, /data/app/~~hJgglDFBJC_Mi94ADaY52A==/com.aistudio.applet.amqeil-kwA8e7ZD6If-tXpo5UponQ==/base.apk!/lib/arm64-v8a, /system/lib64, /system_ext/lib64]]
+                                                                                                    	at dalvik.system.BaseDexClassLoader.findClass(BaseDexClassLoader.java:248)
+                                                                                                    	at java.lang.ClassLoader.loadClass(ClassLoader.java:644)
+                                                                                                    	at java.lang.ClassLoader.loadClass(ClassLoader.java:580)
+                                                                                                    	at android.app.AppComponentFactory.instantiateReceiver(AppComponentFactory.java:110)
+                                                                                                    	at androidx.core.app.CoreComponentFactory.instantiateReceiver(CoreComponentFactory.java:59)
+                                                                                                    	at android.app.ActivityThread.handleReceiver(ActivityThread.java:4995)
+                                                                                                    	at android.app.ActivityThread.-$$Nest$mhandleReceiver(ActivityThread.java:0) 
+                                                                                                    	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2550) 
+                                                                                                    	at android.os.Handler.dispatchMessage(Handler.java:107) 
+                                                                                                    	at android.os.Looper.loopOnce(Looper.java:273) 
+                                                                                                    	at android.os.Looper.loop(Looper.java:364) 
+                                                                                                    	at android.app.ActivityThread.main(ActivityThread.java:9114) 
+                                                                                                    	at java.lang.reflect.Method.invoke(Native Method) 
+                                                                                                    	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:692) 
+                                                                                                    	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:939) 
+2026-10-09 10:23:18.693 20047-20047 ExceptionHandle         com.aistudio.applet.amqeil           I  at android.app.ActivityThread.handleReceiver(ActivityThread.java:5003)
